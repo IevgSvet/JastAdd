@@ -1,0 +1,50 @@
+<HTML>
+<head><script src="../../resources/jquery.js"></script><script>$(document).ready(function(event) {$(document.location.hash).css('background', 'yellow');$(document.location.hash + ' span').css('color', 'red');});</script></head><BODY BGCOLOR="white">
+<PRE>
+<span id="line-1"><span style="color: green">001</span>    aspect Debugging {<a name="line-1"></a></span>
+<span id="line-2"><span style="color: green">002</span>    <a name="line-2"></a></span>
+<span id="line-3"><span style="color: green">003</span>      public String ASTNode.getASTString() {<a name="line-3"></a></span>
+<span id="line-4"><span style="color: green">004</span>    <a name="line-4"></a></span>
+<span id="line-5"><span style="color: green">005</span>        String result = this.getClass().getSimpleName() + "\n";<a name="line-5"></a></span>
+<span id="line-6"><span style="color: green">006</span>    <a name="line-6"></a></span>
+<span id="line-7"><span style="color: green">007</span>        for (java.lang.reflect.Method method : this.getClass().getMethods()) {<a name="line-7"></a></span>
+<span id="line-8"><span style="color: green">008</span>          ASTNodeAnnotation.Token annotation = method.getAnnotation(ASTNodeAnnotation.Token.class);<a name="line-8"></a></span>
+<span id="line-9"><span style="color: green">009</span>          if (annotation != null) {<a name="line-9"></a></span>
+<span id="line-10"><span style="color: green">010</span>            try {<a name="line-10"></a></span>
+<span id="line-11"><span style="color: green">011</span>              result += "|--" + annotation.name() + ": " + method.invoke(this);<a name="line-11"></a></span>
+<span id="line-12"><span style="color: green">012</span>            } catch (IllegalAccessException e) {<a name="line-12"></a></span>
+<span id="line-13"><span style="color: green">013</span>              e.printStackTrace();<a name="line-13"></a></span>
+<span id="line-14"><span style="color: green">014</span>            } catch (java.lang.reflect.InvocationTargetException e) {<a name="line-14"></a></span>
+<span id="line-15"><span style="color: green">015</span>              e.printStackTrace();<a name="line-15"></a></span>
+<span id="line-16"><span style="color: green">016</span>            }<a name="line-16"></a></span>
+<span id="line-17"><span style="color: green">017</span>            result += "\n";<a name="line-17"></a></span>
+<span id="line-18"><span style="color: green">018</span>          }<a name="line-18"></a></span>
+<span id="line-19"><span style="color: green">019</span>        }<a name="line-19"></a></span>
+<span id="line-20"><span style="color: green">020</span>    <a name="line-20"></a></span>
+<span id="line-21"><span style="color: green">021</span>        for(int childIndex = 0; childIndex &lt; getNumChildNoTransform(); childIndex++) {<a name="line-21"></a></span>
+<span id="line-22"><span style="color: green">022</span>    <a name="line-22"></a></span>
+<span id="line-23"><span style="color: green">023</span>          ASTNode&lt;?&gt; child = getChildNoTransform(childIndex);<a name="line-23"></a></span>
+<span id="line-24"><span style="color: green">024</span>          String childString = "NULL\n";<a name="line-24"></a></span>
+<span id="line-25"><span style="color: green">025</span>          if(child != null) {<a name="line-25"></a></span>
+<span id="line-26"><span style="color: green">026</span>            childString = child.getASTString();<a name="line-26"></a></span>
+<span id="line-27"><span style="color: green">027</span>          }<a name="line-27"></a></span>
+<span id="line-28"><span style="color: green">028</span>    <a name="line-28"></a></span>
+<span id="line-29"><span style="color: green">029</span>          if(childIndex &lt; getNumChildNoTransform() - 1) {<a name="line-29"></a></span>
+<span id="line-30"><span style="color: green">030</span>            childString = childString.replaceAll("(?m)^", "|  ");<a name="line-30"></a></span>
+<span id="line-31"><span style="color: green">031</span>          } else {<a name="line-31"></a></span>
+<span id="line-32"><span style="color: green">032</span>            childString = childString.replaceAll("(?m)^", "   ");<a name="line-32"></a></span>
+<span id="line-33"><span style="color: green">033</span>          }<a name="line-33"></a></span>
+<span id="line-34"><span style="color: green">034</span>    <a name="line-34"></a></span>
+<span id="line-35"><span style="color: green">035</span>          result += "|\n|--" + childString.substring(3);<a name="line-35"></a></span>
+<span id="line-36"><span style="color: green">036</span>        }<a name="line-36"></a></span>
+<span id="line-37"><span style="color: green">037</span>    <a name="line-37"></a></span>
+<span id="line-38"><span style="color: green">038</span>        return result;<a name="line-38"></a></span>
+<span id="line-39"><span style="color: green">039</span>      }<a name="line-39"></a></span>
+<span id="line-40"><span style="color: green">040</span>    <a name="line-40"></a></span>
+<span id="line-41"><span style="color: green">041</span>      public void ASTNode.printAST() {<a name="line-41"></a></span>
+<span id="line-42"><span style="color: green">042</span>        System.out.println(getASTString());<a name="line-42"></a></span>
+<span id="line-43"><span style="color: green">043</span>      }<a name="line-43"></a></span>
+<span id="line-44"><span style="color: green">044</span>    }<a name="line-44"></a></span>
+</PRE>
+</BODY>
+</HTML>
