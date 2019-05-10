@@ -1,17 +1,45 @@
 aspect Optimization {
 
-  // rewrite Exp {
-  // when ( /* condition */ )
-  //   to Number {
-  //     // ...
-  //   }
-  // }
+    syn boolean Exp.isConstantSubtree();
 
-  // rewrite MulExp {
-  //   when ( /* condition */ )
-  //   to Number {
-  //     // ...
-  //   }
-  // }
+    eq BinExp.isConstantSubtree() = getA().isConstantSubtree() && getB().isConstantSubtree();
+    eq UnaryMinusExp.isConstantSubtree() = getA().isConstantSubtree();
+    eq Number.isConstantSubtree() = true;
+    eq Var.isConstantSubtree() = false;
+
+    rewrite Exp {
+        when ( !(this instanceof Number) && isConstantSubtree() )
+        to Number {
+            Number num = new Number();
+            num.setValue(eval());
+            return num;
+        }
+    }
+
+
+    syn boolean MulExp.isMulWithZero() = (getA().isMulWithZero()) || (getB().isMulWithZero());
+    syn boolean AddExp.isMulWithZero() = false;
+    syn boolean DivExp.isMulWithZero() = false;
+    syn boolean MinusExp.isMulWithZero() = false;
+    syn boolean UnaryMinusExp.isMulWithZero() = false;
+    syn boolean Exp.isMulWithZero() = false;
+
+    syn boolean Number.isMulWithZero() {
+        if (eval() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    syn boolean Var.isMulWithZero() = false;
+
+    rewrite MulExp {
+        when ( isMulWithZero() )
+        to Number {
+            Number num = new Number();
+            num.setValue(0);
+            return num;
+        }
+    }
 
 }
