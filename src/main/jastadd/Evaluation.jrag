@@ -9,5 +9,6 @@ aspect Evaluation {
   eq MinusExp.eval() = getA().eval() - getB().eval();
   eq UnaryMinusExp.eval() = - getA().eval();
   eq Number.eval() = getValue();
+  eq Var.eval() = getDef().getValue();
   //eq Var.print() = getName();
 }
