@@ -1,8 +1,45 @@
+import java.util.ArrayList;
+
 aspect Analysis {
 
-  coll java.util.Set<Def> Root.unusedDefs() [new java.util.HashSet<Def>()] with add root Root;
-  // TODO contribution statement
+    syn ArrayList<String> Exp.getDefs();
 
-  // TODO additional helper attribute may be needed!
+    eq BinExp.getDefs() {
+        ArrayList<String> defs = new ArrayList<String>();
+        for (String def : getA().getDefs())
+            defs.add(def);
+        for (String def : getB().getDefs())
+            defs.add(def);
+        return defs;
+    }
+    eq UnaryMinusExp.getDefs() {
+        ArrayList<String> defs = new ArrayList<String>();
+        for (String def : getA().getDefs())
+            defs.add(def);
+        return defs;
+    }
+    eq Exp.getDefs() = new ArrayList<String>();
+    eq Var.getDefs() {
+        ArrayList<String> defs = new ArrayList<String>();
+        defs.add(getDef().getName());
+        return defs;
+    }
 
+
+    inh Boolean Def.isVar(String def_name);
+
+    eq Root.getDef(int i).isVar(String def_name) {
+        for (String def: getExp().getDefs()){
+            if(def.equals(def_name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    coll java.util.Set<Def> Root.unusedDefs() [new java.util.HashSet<Def>()] with add root Root;
+
+    Def contributes this
+        when isVar(getName()) == false
+        to Root.unusedDefs();
 }
