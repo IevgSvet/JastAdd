@@ -18,10 +18,6 @@ aspect Optimization {
 
 
     syn boolean MulExp.isMulWithZero() = (getA().isMulWithZero()) || (getB().isMulWithZero());
-    syn boolean AddExp.isMulWithZero() = false;
-    syn boolean DivExp.isMulWithZero() = false;
-    syn boolean MinusExp.isMulWithZero() = false;
-    syn boolean UnaryMinusExp.isMulWithZero() = false;
     syn boolean Exp.isMulWithZero() = false;
 
     syn boolean Number.isMulWithZero() {
