@@ -1,45 +1,19 @@
-import java.util.ArrayList;
-
 aspect Analysis {
 
-    syn ArrayList<String> Exp.getDefs();
+    syn Boolean Exp.usesDef(String name);
 
-    eq BinExp.getDefs() {
-        ArrayList<String> defs = new ArrayList<String>();
-        for (String def : getA().getDefs())
-            defs.add(def);
-        for (String def : getB().getDefs())
-            defs.add(def);
-        return defs;
-    }
-    eq UnaryMinusExp.getDefs() {
-        ArrayList<String> defs = new ArrayList<String>();
-        for (String def : getA().getDefs())
-            defs.add(def);
-        return defs;
-    }
-    eq Exp.getDefs() = new ArrayList<String>();
-    eq Var.getDefs() {
-        ArrayList<String> defs = new ArrayList<String>();
-        defs.add(getDef().getName());
-        return defs;
-    }
+    eq Exp.usesDef(String name) = false;
+    eq BinExp.usesDef(String name) = getA().usesDef(name) || getB().usesDef(name);
+    eq UnaryMinusExp.usesDef(String name) = getA().usesDef(name);
+    eq Var.usesDef(String name) = getName().equals(name) ? true : false;
 
+    inh Boolean Def.isesInVar(String def_name);
 
-    inh Boolean Def.isVar(String def_name);
-
-    eq Root.getDef(int i).isVar(String def_name) {
-        for (String def: getExp().getDefs()){
-            if(def.equals(def_name)){
-                return true;
-            }
-        }
-        return false;
-    }
+    eq Root.getDef(int i).isesInVar(String def_name) = getExp().usesDef(def_name) ? true : false;
 
     coll java.util.Set<Def> Root.unusedDefs() [new java.util.HashSet<Def>()] with add root Root;
 
     Def contributes this
-        when isVar(getName()) == false
+        when isesInVar(getName()) == false
         to Root.unusedDefs();
 }
