@@ -7,13 +7,13 @@ aspect Analysis {
     eq UnaryMinusExp.usesDef(String name) = getA().usesDef(name);
     eq Var.usesDef(String name) = getName().equals(name) ? true : false;
 
-    inh Boolean Def.isesInVar(String def_name);
+    inh Boolean Def.usesInVar(String def_name);
 
-    eq Root.getDef(int i).isesInVar(String def_name) = getExp().usesDef(def_name) ? true : false;
+    eq Root.getDef(int i).usesInVar(String def_name) = getExp().usesDef(def_name) ? true : false;
 
     coll java.util.Set<Def> Root.unusedDefs() [new java.util.HashSet<Def>()] with add root Root;
 
     Def contributes this
-        when isesInVar(getName()) == false
+        when usesInVar(getName()) == false
         to Root.unusedDefs();
 }
